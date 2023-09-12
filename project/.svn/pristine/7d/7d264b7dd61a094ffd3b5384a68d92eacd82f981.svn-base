@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:task="http://www.springframework.org/schema/task" 
+   xmlns:aop="http://www.springframework.org/schema/aop" 
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:mvc="http://www.springframework.org/schema/mvc"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xmlns:c="http://www.springframework.org/schema/c"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:util="http://www.springframework.org/schema/util"
+   xmlns:websocket="http://www.springframework.org/schema/websocket"
+   xmlns:sec="http://www.springframework.org/schema/security"
+   xmlns:tx="http://www.springframework.org/schema/tx" 
+    
+   xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/task
+       http://www.springframework.org/schema/task/spring-task.xsd       
+        http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+      http://www.springframework.org/schema/mvc/spring-mvc.xsd     
+        http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd
+         http://www.springframework.org/schema/websocket
+      http://www.springframework.org/schema/websocket/spring-websocket.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd   
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd   
+      ">
+    <!-- 
+    
+    @Controller/@Service/@Repository 클래스 ==> 객체
+    A04_PreparedDao ==> 클래스
+    컨테이너(메모리 수영장)
+    empList01.do 위 객체들의 메서드 중에 찾기 시작
+     -->  
+	<context:component-scan base-package="vgbox">
+		<context:include-filter type="annotation" 
+		expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" 
+		expression="org.springframework.stereotype.Service"/>
+		<context:include-filter type="annotation" 
+		expression="org.springframework.stereotype.Repository"/>
+	</context:component-scan>  
+	      <!-- 
+      # DB 연결 처리
+      1. DBCP(Database Connection Pool)을 이용해서 DB연결 처리
+      	 destroy-method="close" 종료시 bean 객체에서 사용하는
+      	 메서드 정의   
+       -->
+       <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+       destroy-method="close">
+       	 	<property name="driverClassName" 
+       	 		value="oracle.jdbc.driver.OracleDriver"/>
+       	 	<property name="url" 
+       	 		value="jdbc:oracle:thin:@122.99.163.86:1521:xe"/>
+       	 	<property name="username" value="himan"/>	
+       	 	<property name="password" value="7777"/>	
+       </bean>
+       <!-- 
+       # mybatis 연동 처리
+       1. 위 연결 정보 설정
+       2. mybatis 공통 xml 연동 처리
+       3. mybatis를 통해 만들어질 실제 객체가 바라보는 
+       		dao interface 위치 설정
+       		1) 여러 패키지에 있는 dao를 호출하려면 아래와 같이 설정
+       			value="패키지1 이름; 패키지2 이름"
+        --> 
+       <bean id="sqlSessionFactory" 
+       	class="org.mybatis.spring.SqlSessionFactoryBean">
+       		<property name="dataSource" ref="dataSource"/>
+       		<property name="configLocation" 
+       			value="classpath:resource/mybatis.Spring.xml"/>
+       </bean> 
+       <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+       		<property name="basePackage" 
+       		value="vgbox.vgboxDB.DAO"/>
+       </bean>
+</beans>      

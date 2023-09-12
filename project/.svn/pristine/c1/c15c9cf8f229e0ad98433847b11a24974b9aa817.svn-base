@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/reg.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
+    <title>로그인/회원가입</title>
+    <script src = "https://code.jquery.com/jquery-3.7.0.js" type="text/javascript"></script>
+    <script>
+        function hide(){
+          $("#businessNum").hide()
+        }
+        function show(){
+          $("#businessNum").show()
+        }
+    </script>
+</head>
+<body>
+<div class="container" id="container">
+  <div class="form-container sign-up-container">
+    <form method="post">
+      <h1>Create Account</h1>
+      <div class="radio_btn">
+        <input type="radio" name="memChoice" id="memChoice" value="seller" onclick="show()"><label>판매자</label>
+        <input type="radio" name="memChoice" id="memChoice" value="user" onclick="hide()" checked><label>구매자</label>
+      </div>
+      <div class="tooltip" style="display: flex;">
+        <input type="text" placeholder="ID" id="join_id" name="id"/>
+        <!-- <button id="checkDupli">중복확인</button> -->
+        <span class="tooltiptext" id="id_guide">영문,숫자를 조합하여 최소 6자리이상 20자리로 입력해주세요</span>
+      </div>
+      <div class="tooltip">  
+        <input type="password" placeholder="Password" id="join_pwd" name="pwd" />
+        <span class="tooltiptext" id="pwd_guide">영문, 숫자, 특수문자를 포함하여 8~15자 비밀번호를 입력해주세요</span>
+      </div>
+      <div class="tooltip">
+        <input type="password" placeholder="Password Check" id="join_pwdCheck"/>
+        <span class="tooltiptext" id="pwdCheck_guide">비밀번호와 일치하게 입력해주세요</span>
+      </div>
+      <div class="tooltip">    
+        <input type="text" placeholder="Name" id="join_name" name="name" />
+        <span class="tooltiptext" id="name_guide">한글 또는 영문으로 입력해주세요</span>
+      </div>
+      <div class="tooltip"> 
+        <input type="text" placeholder="Address" id="join_address" name="address" />
+        <span class="tooltiptext" id="address_guide">한글 또는 영문으로 이름을 입력해주세요</span>
+      </div>
+      <div class="tooltip"> 
+        <input type="text" placeholder="Phone Number" id="join_phoneNum" name="phoneNum" />
+        <span class="tooltiptext" id="phone_guide">"-"를 포함하여 휴대폰 번호를 입력해주세요</span>
+      </div>
+      <div class="tooltip"> 
+        <input type="text" placeholder="Business Number" id="businessNum" name="businessNum" style="display:none;"/>
+        <span class="tooltiptext" id="business_guide">"-"를 포함하여 사업자 번호를 입력해주세요</span>
+      </div>
+      <button>Sign Up</button>
+    </form>
+  </div>
+  <div class="form-container sign-in-container">
+    <form method="post">
+      <h1>Sign in</h1>
+      <div class="radio_btn">
+        <input type="radio" name="memChoice" id="memChoice" value="seller"><label>판매자</label>
+        <input type="radio" name="memChoice" id="memChoice" value="user"><label>구매자</label>
+      </div>
+      <input type="text" placeholder="ID" id="id" name="id"/>
+      <input type="password" placeholder="Password" id="pwd" name="pwd" />
+      <a href="#">Forgot your Password?</a>
+      <button>SIGN IN</button>
+    </form>
+  </div>
+  <div class="overlay-container">
+    <div class="overlay">
+      <div class="overlay-panel overlay-left">
+        <h1>Welcome VeggieBox!</h1>
+        <p>To Save Vegetables<br>
+        Please Keep Connected With Us</p>
+        <button class="ghost" id="signIn">Sign In</button>
+      </div>
+      <div class="overlay-panel overlay-right">
+        <h1>Hello, Friend!</h1>
+        <p>Enter Our Store And Start With Us</p>
+        <button class="ghost" id="signUp">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+  window.onload = function(){
+    document.getElementById("join_address").addEventListener("click", function(){ 
+        new daum.Postcode({
+            oncomplete: function(data) { 
+                document.getElementById("join_address").value = data.address;
+            }
+        }).open();
+    });
+  }
+  const signUpButton = document.getElementById('signUp');
+  const signInButton = document.getElementById('signIn');
+  const container = document.getElementById('container');
+
+  signUpButton.addEventListener('click', () => {
+    container.classList.add("right-panel-active");
+  });
+
+  signInButton.addEventListener('click', () => {
+    container.classList.remove("right-panel-active");
+  });
+
+  var checkID = RegExp(/^[a-z0-9]{6,20}$/);
+  var checkPW = RegExp(/^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,15}$/);
+  var checkName = RegExp(/^[가-힣]|[A-Z]|[a-z]$/);
+  var checkAddress = RegExp(/^[가-힣]|[A-Z]|[a-z]$/);
+  var checkPhone = RegExp(/\d{3}-\d{4}-\d{4}/);
+  var checkBusiness = RegExp(/\d{3}-\d{2}-\d{5}/);
+  
+$(function(){
+  function check(){
+    $("#join_id").blur(function(){
+      if($("#join_id").val()==""){
+        /* alert("아이디를 입력해주세요") */
+        $("#id_guide").text("아이디를 입력해주세요")
+        $("#id_guide").css("color","#FF4B2B")
+      }else{
+        if(!checkID.test($("#join_id").val())){
+          $("#id_guide").text("영문 혹은 영문과 숫자를 조합하여 최소 6자리이상 20자리로 입력해주세요")
+          $("#id_guide").css("color","#FF4B2B")
+          $("#join_id").focus();
+        }else{
+          $("#id_guide").text("사용 가능한 아이디입니다.").css("color", "#3f8ef7")
+        }
+      }  
+    })
+
+    $("#join_pwd").blur(function(){
+      if($("#join_pwd").val()==""){
+          $("#pwd_guide").text("비밀번호를 입력해주세요")
+          $("#pwd_guide").css("color","#FF4B2B")
+      }else{
+        if(!checkPW.test($("#join_pwd").val())){
+          $("#pwd_guide").text("영문, 숫자, 특수문자를 포함하여 8~15자 비밀번호를 입력해주세요")
+          $("#pwd_guide").css("color","#FF4B2B")
+          $("#join_pwd").focus()
+        }else{
+          $("#pwd_guide").text("사용 가능한 비밀번호입니다.").css("color", "#3f8ef7")
+        }        
+      }
+    })
+
+    $("#join_pwdCheck").blur(function(){
+      if($("#join_pwdCheck").val()==""){
+        $("#pwdCheck_guide").text("비밀번호와 일치하게 입력해주세요")
+        $("#pwdCheck_guide").css("color","#FF4B2B")        
+      }
+      else{
+        if($("#join_pwd").val()!=$("#join_pwdCheck").val()){
+          $("#pwdCheck_guide").text("비밀번호와 일치하게 입력해주세요")
+          $("#pwdCheck_guide").css("color","#FF4B2B")
+          $("#join_pwdCheck").focus()
+        }
+        if($("#join_pwd").val()==$("#join_pwdCheck").val()){
+          $("#pwdCheck_guide").text("비밀번호 일치 확인").css("color", "#3f8ef7")
+        }
+      }
+    })
+
+    $("#join_name").blur(function(){
+      if($("#join_name").val()==""){
+        $("#name_guide").text("이름을 입력해주세요")
+        $("#name_guide").css("color","#FF4B2B")
+      }else{
+        if(!checkName.test($("#join_name").val())){
+          $("#name_guide").text("한글 또는 영문으로 이름을 입력해주세요");
+          $("#name_guide").css("color","#FF4B2B")
+          $("#join_name").focus()
+        }else{
+          $("#name_guide").text("사용 가능한 이름입니다.").css("color", "#3f8ef7")
+        }
+      }
+    })
+
+    $("#join_address").blur(function(){
+      if($("#join_address").val()==""){
+        $("#address_guide").text("주소를 입력해주세요")
+        $("#address_guide").css("color","#FF4B2B")
+      }else{
+        if(!checkAddress.test($("#join_address").val())){
+          $("#address_guide").text("한글 또는 영문으로 주소를 입력해주세요")
+          $("#address_guide").css("color","#FF4B2B")
+          $("#join_address").focus()
+        }else{
+          $("#address_guide").text("주소 확인").css("color", "#3f8ef7")
+        }
+      }
+    })
+
+    $("#join_phoneNum").blur(function(){
+      if($("#join_phoneNum").val()==""){
+        $("#phone_guide").text("휴대폰 번호를 입력해주세요")
+        $("#phone_guide").css("color","#FF4B2B")
+      }else{
+        if(!checkPhone.test($("#join_phoneNum").val())){
+          $("#phone_guide").text("'-'를 포함하여 휴대폰 번호를 입력해주세요");
+          $("#phone_guide").css("color","#FF4B2B")
+          $("#join_phoneNum").focus();
+        }else{
+          $("#phone_guide").text("휴대폰 번호 확인").css("color", "#3f8ef7")
+        }
+      }
+    })
+
+    $("#businessNum").blur(function(){
+      if($("#businessNum").val()==""){
+        $("#business_guide").text("사업자 번호를 입력해주세요")
+        $("#business_guide").css("color","#FF4B2B")
+      }else{
+        if(!checkBusiness.test($("#businessNum").val())){
+        /* alert("'-'를 포함하여 사업자 번호를 입력해주세요") */
+          $("#business_guide").text("'-'를 포함하여 사업자 번호를 입력해주세요")
+          $("#business_guide").css("color","#FF4B2B")
+          $("#businessNum").focus();
+        }else{
+          $("#business_guide").text("사업자 번호 확인").css("color", "#3f8ef7")
+        }
+      }  
+    })
+  }
+  check();
+
+})      
+
+
+</script>
+</html>

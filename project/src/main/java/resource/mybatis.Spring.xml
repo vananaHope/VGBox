@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 선언된 Mapper.xml에서 member라는 이름으로 
+	해당 객체에 접근항 사용 가능하다. -->
+	<typeAliases>
+		<typeAlias alias="seller" type="vgbox.vgboxDB.VO.Seller"/>
+		<typeAlias alias="member" type="vgbox.vgboxDB.VO.Member"/>
+
+	</typeAliases>
+	<mappers>
+		<!-- sql을 입력값과 리턴값에 의해 실제 객체를 만들어주는 xml
+			선언 위치 지정 -->
+		<mapper resource="resource/MemberMapper.xml"/>
+	</mappers>
+</configuration>

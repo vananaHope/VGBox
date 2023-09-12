@@ -1,0 +1,13 @@
+package vgbox;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class A01_StartController {
+	// http://122.99.163.86:5080/project/start.do
+	@RequestMapping("start.do")
+	public String start() {
+		return "WEB-INF\\views\\a01_start\\a01_start.jsp";
+	}
+}
